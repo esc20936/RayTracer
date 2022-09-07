@@ -58,4 +58,4 @@ rtx.scene.append( Sphere(V3(0, -1, -10.5),0.3, black) )
 
 rtx.glRender()
 
-rtx.glFinish("output.bmp")
+rtx.glFinish("outputa.bmp")

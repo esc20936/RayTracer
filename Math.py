@@ -1,6 +1,9 @@
 import numpy as np
-import math 
+from collections import namedtuple
+# import struct
+# import math 
 
+V3 = namedtuple('Point3', ['x', 'y', 'z'])
 def zeros_matrix(rows, cols):
     M = []
     while len(M) < rows:
@@ -119,3 +122,11 @@ def multiply_vector(v1, v2):
     for i in range(len(v1)):
         r.append(v1[i] * v2[i])
     return r
+
+def normalize(v):
+    v = [v.x, v.y, v.z]
+    maxV = max(v)
+    for i in range(len(v)):
+        v[i] /= maxV
+    v = V3(v[0], v[1], v[2])
+    return v

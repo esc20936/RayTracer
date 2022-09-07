@@ -179,13 +179,14 @@ class Raytracer(object):
                 Py = ((y + 0.5 - self.vpY) / self.vpHeight) * 2 - 1
 
                 # Proyeccion
-                t = tan((self.fov * np.pi / 180) / 2) * self.nearPlane
+                t = tan((self.fov * 3.141592653589793 / 180) / 2) * self.nearPlane
                 r = t * self.vpWidth / self.vpHeight
 
                 Px *= r
                 Py *= t
 
                 direction = V3(Px, Py, -self.nearPlane)
+                # direction = Math.normalize(direction)
                 direction = direction / np.linalg.norm(direction)
 
                 rayColor = self.cast_ray(self.camPosition, direction)
