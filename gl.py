@@ -1,7 +1,7 @@
 import struct
 from collections import namedtuple
 import numpy as np
-
+import Math
 from math import cos, sin, tan, pi
 
 from obj import Obj
@@ -117,26 +117,27 @@ class Raytracer(object):
 
         material = intersect.sceneObj.material
 
-        finalColor = np.array([0,0,0])
-        objectColor = np.array([material.diffuse[0],
+        finalColor = [0,0,0]
+        objectColor = [material.diffuse[0],
                                 material.diffuse[1],
-                                material.diffuse[2]])
+                                material.diffuse[2]]
 
-        dirLightColor = np.array([0,0,0])
-        ambLightColor = np.array([0,0,0])
+        dirLightColor = [0,0,0]
+        ambLightColor = [0,0,0]
 
 
         for light in self.lights:
             if light.lightType == 0: # directional light
-                diffuseColor = np.array([0,0,0])
-
-                light_dir = np.array(light.direction) * -1
-                intensity = np.dot(intersect.normal, light_dir)
+                diffuseColor = [0,0,0]
+                light_dir = Math.negative_vector(light.direction)
+                # light_dir = np.array(light.direction) * -1
+                # intensity = np.dot(intersect.normal, light_dir)
+                intensity = Math.dot_product(intersect.normal, light_dir)
                 intensity = float(max(0, intensity))
 
-                diffuseColor = np.array([intensity * light.color[0] * light.intensity,
+                diffuseColor =[intensity * light.color[0] * light.intensity,
                                          intensity * light.color[1] * light.intensity,
-                                         intensity * light.color[2] * light.intensity])
+                                         intensity * light.color[2] * light.intensity]
 
                 #Shadows
                 shadow_intensity = 0
@@ -144,15 +145,21 @@ class Raytracer(object):
                 if shadow_intersect:
                     shadow_intensity = 1
 
+                # print(dirLightColor, diffuseColor, shadow_intensity)
+                a = Math.number_multiply_vector((1-shadow_intensity), diffuseColor)
 
-                dirLightColor = np.add(dirLightColor, diffuseColor * (1 - shadow_intensity))
+                dirLightColor = Math.add_vectors(dirLightColor, a)
+                # np.add(dirLightColor, diffuseColor * (1 - shadow_intensity))
 
             elif light.lightType == 2: # ambient light
-                ambLightColor = np.array(light.color) * light.intensity
+                ambLightColor = Math.number_multiply_vector(light.intensity,light.color)
+                #  np.array(light.color) * light.intensity
 
-        finalColor = dirLightColor + ambLightColor
+        # finalColor = dirLightColor + ambLightColor
+        finalColor = Math.add_vectors(dirLightColor, ambLightColor)
 
-        finalColor *= objectColor
+        # finalColor *= objectColor
+        finalColor = Math.multiply_vector(finalColor, objectColor)
 
         r = min(1, finalColor[0])
         g = min(1, finalColor[1])
